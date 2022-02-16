@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import './App.css'
+import { Auth } from './components/Auth'
+import { Google } from './components/Google'
+import { SignIn } from './components/SignIn'
+import { Login } from './components/Login'
+import { TwoFactorSet } from './components/TwoFactorSet'
+
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from './config/firebase'
+
+onAuthStateChanged(auth, (user) => {
+  console.log('onAuthStateChanged')
+  if (user) {
+    console.log('signIn')
+  } else {
+    console.log('signOut')
+  }
+})
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Auth />} />
+        <Route path="/google" element={<Google />} />
+        <Route path="/email" element={<SignIn />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/two-factor-set" element={<TwoFactorSet />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
