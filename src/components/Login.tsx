@@ -6,6 +6,7 @@ import {
   PhoneAuthProvider,
   signInWithEmailAndPassword,
   getMultiFactorResolver,
+  PhoneMultiFactorGenerator,
 } from 'firebase/auth'
 
 import { configureCaptcha } from '../config/configureCaptcha'
@@ -14,26 +15,55 @@ import { Logout } from './Logout'
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
+  const [verificationId, setVerificationId] = useState('')
+  const [otp, setOtp] = useState('')
+  const [resolve, setResolve] = useState<any>()
   const loginForm = async () => {
     const recaptchaVerifier = configureCaptcha()
     console.log(recaptchaVerifier)
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
     } catch (error: any) {
+      let resolver: any;
       if (error.code === 'auth/multi-factor-auth-required') {
         console.log(error.code)
-        const multiResolver = getMultiFactorResolver(auth, error)
-        const phoneOptions = {
-          multiFactorHint: multiResolver!.hints[0],
-          session: multiResolver!.session,
-        }
-        const phoneAuthProvider = new PhoneAuthProvider(auth)
-        await phoneAuthProvider.verifyPhoneNumber(
-          phoneOptions,
-          recaptchaVerifier
-        )
-        alert('Code has been sent to your phone')
+        resolver = getMultiFactorResolver(auth, error)
+        setResolve(resolver)
       }
+      const multiResolver = getMultiFactorResolver(auth, error)
+        
+      const phoneOptions = {
+        multiFactorHint: multiResolver!.hints[0],
+        session: multiResolver!.session,
+      }
+      const phoneAuthProvider = new PhoneAuthProvider(auth)
+      const verifyId = await phoneAuthProvider.verifyPhoneNumber(
+        phoneOptions,
+        recaptchaVerifier
+      )
+      setVerificationId(verifyId)
+      alert('Code has been sent to your phone')
+    }
+  }
+
+  const verifyAction = async () => {
+    try {
+      const firebaseCredentials = PhoneAuthProvider.credential(
+        verificationId,
+        otp
+      );
+      const multiFactorAssertion =
+        PhoneMultiFactorGenerator.assertion(firebaseCredentials);
+      const credentials = await resolve.resolveSignIn(
+        multiFactorAssertion
+      );
+      console.log(credentials, "credentials");
+      console.log("success");
+      setTimeout(() => {
+        navigate('/')
+      }, 1000)
+    } catch (e) {
+      console.log(e, 'error')
     }
   }
   const navigate = useNavigate()
@@ -75,6 +105,25 @@ export const Login = () => {
             className="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 py-2 rounded-md text-lg tracking-wide"
           >
             ログイン
+          </button>
+          <div>
+            <label className="block mb-1 text-gray-600 font-semibold">
+              認証コード
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              onChange={(e) => setOtp(e.target.value)}
+              className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+            />
+          </div>
+          <button
+            id="sign-in-button"
+            onClick={() => verifyAction()}
+            className="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 py-2 rounded-md text-lg tracking-wide"
+          >
+            コード認証
           </button>
           <Logout />
           <button
