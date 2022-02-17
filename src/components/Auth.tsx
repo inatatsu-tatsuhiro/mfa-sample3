@@ -24,6 +24,12 @@ export const Auth = () => {
       >
         メールでのログイン
       </button>
+      <button
+        className="mt-3 px-3 py-2 text-white bg-indigo-600 rounded"
+        onClick={() => navigate('firebase-ui')}
+      >
+        FirebaseUI
+      </button>
       <Logout/>
     </div>
   )
