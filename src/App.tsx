@@ -5,6 +5,7 @@ import { Google } from './components/Google'
 import { SignIn } from './components/SignIn'
 import { Login } from './components/Login'
 import { TwoFactorSet } from './components/TwoFactorSet'
+import { FirebaseUI } from './components/FirebaseUI'
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './config/firebase'
@@ -27,6 +28,7 @@ function App() {
         <Route path="/email" element={<SignIn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/two-factor-set" element={<TwoFactorSet />} />
+        <Route path="/firebase-ui" element={<FirebaseUI/>} />
       </Routes>
     </BrowserRouter>
   )
