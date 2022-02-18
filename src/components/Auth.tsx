@@ -30,7 +30,13 @@ export const Auth = () => {
       >
         FirebaseUI
       </button>
-      <Logout/>
+      <button
+        className="mt-3 px-3 py-2 text-white bg-indigo-600 rounded"
+        onClick={() => navigate('contents')}
+      >
+        管理者ページ
+      </button>
+      <Logout />
     </div>
   )
 }

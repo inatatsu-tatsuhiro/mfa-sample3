@@ -9,11 +9,18 @@ import { FirebaseUI } from './components/FirebaseUI'
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './config/firebase'
+import { Contents } from './components/Contents'
 
 onAuthStateChanged(auth, (user) => {
   console.log('onAuthStateChanged')
   if (user) {
-    console.log('signIn')
+    console.log('signIn', user)
+    if (!!(user as any).reloadUserInfo.mfaInfo) {
+      // MFA userかの確認
+      console.log('mfa user')
+    } else {
+      console.log('not mfa user')
+    }
   } else {
     console.log('signOut')
   }
@@ -28,7 +35,8 @@ function App() {
         <Route path="/email" element={<SignIn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/two-factor-set" element={<TwoFactorSet />} />
-        <Route path="/firebase-ui" element={<FirebaseUI/>} />
+        <Route path="/firebase-ui" element={<FirebaseUI />} />
+        <Route path="/contents" element={<Contents />} />
       </Routes>
     </BrowserRouter>
   )
