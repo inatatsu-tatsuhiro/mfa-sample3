@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import { Auth } from './components/Auth'
 import { Google } from './components/Google'
+import { Microsoft } from './components/Microsoft'
 import { SignIn } from './components/SignIn'
 import { Login } from './components/Login'
 import { TwoFactorSet } from './components/TwoFactorSet'
@@ -32,6 +33,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/google" element={<Google />} />
+        <Route path="/microsoft" element={<Microsoft />} />
         <Route path="/email" element={<SignIn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/two-factor-set" element={<TwoFactorSet />} />

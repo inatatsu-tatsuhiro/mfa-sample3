@@ -14,6 +14,12 @@ export const Auth = () => {
       </button>
       <button
         className="mt-3 px-3 py-2 text-white bg-indigo-600 rounded"
+        onClick={() => navigate('microsoft')}
+      >
+        Microsoftログイン
+      </button>
+      <button
+        className="mt-3 px-3 py-2 text-white bg-indigo-600 rounded"
         onClick={() => navigate('email')}
       >
         メールでのアカウント作成
